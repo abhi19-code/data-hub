@@ -92,6 +92,12 @@ app.delete("/users/:id", (req, res) => {
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
 
+  if (!username || !password) {
+    return res.status(400).json({
+      message: "Username and password are required",
+    });
+  }
+
   if (username === "admin" && password === "123456") {
     return res.json({
       message: "Login successful",
