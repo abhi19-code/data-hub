@@ -5,20 +5,25 @@ const PORT = 5000;
 
 // Read JSON data
 app.use(express.json());
+// Log every request
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
 
 // Temporary database
 let users = [
   {
     id: 1,
     name: "Abhi",
-    course: "Node.js"
-  }
+    course: "Node.js",
+  },
 ];
 
 // Home route
 app.get("/", (req, res) => {
   res.json({
-    message: "Welcome to Data Hub API"
+    message: "Welcome to Data Hub API",
   });
 });
 
@@ -32,14 +37,14 @@ app.post("/users", (req, res) => {
   const newUser = {
     id: users.length + 1,
     name: req.body.name,
-    course: req.body.course
+    course: req.body.course,
   };
 
   users.push(newUser);
 
   res.status(201).json({
     message: "User added",
-    user: newUser
+    user: newUser,
   });
 });
 
@@ -51,7 +56,7 @@ app.put("/users/:id", (req, res) => {
 
   if (!user) {
     return res.status(404).json({
-      message: "User not found"
+      message: "User not found",
     });
   }
 
@@ -60,7 +65,7 @@ app.put("/users/:id", (req, res) => {
 
   res.json({
     message: "User updated",
-    user
+    user,
   });
 });
 
@@ -72,14 +77,30 @@ app.delete("/users/:id", (req, res) => {
 
   if (!user) {
     return res.status(404).json({
-      message: "User not found"
+      message: "User not found",
     });
   }
 
   users = users.filter((item) => item.id !== id);
 
   res.json({
-    message: "User deleted"
+    message: "User deleted",
+  });
+});
+
+// Login route
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  if (username === "admin" && password === "123456") {
+    return res.json({
+      message: "Login successful",
+      token: "mock-jwt-token-123456",
+    });
+  }
+
+  res.status(401).json({
+    message: "Invalid username or password",
   });
 });
 
