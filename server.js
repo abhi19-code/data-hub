@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const connectDB = require("./config/db");
 const User = require("./models/User");
+const Post = require("./models/Post");
 
 const app = express();
 
@@ -106,6 +107,46 @@ app.delete("/users/:id", async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Failed to delete user",
+      error: error.message,
+    });
+  }
+});
+
+// Create a new post
+app.post("/posts", async (req, res) => {
+  try {
+    const { title, content, author } = req.body;
+
+    if (!title || !content || !author) {
+      return res.status(400).json({
+        message: "Title, content and author are required",
+      });
+    }
+
+    const post = await Post.create({
+      title,
+      content,
+      author,
+    });
+
+    res.status(201).json(post);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to create post",
+      error: error.message,
+    });
+  }
+});
+
+// Get all posts with author information
+app.get("/posts", async (req, res) => {
+  try {
+    const posts = await Post.find().populate("author");
+
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch posts",
       error: error.message,
     });
   }
