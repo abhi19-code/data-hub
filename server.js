@@ -17,36 +17,98 @@ app.get("/", (req, res) => {
   });
 });
 
-// Get all users
-app.get("/users", (req, res) => {
-  res.json({
-    message: "Get users route is working",
-  });
+// GET all users
+app.get("/users", async (req, res) => {
+  try {
+    const users = await User.find();
+
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch users",
+      error: error.message,
+    });
+  }
 });
 
-// Add a user
-app.post("/users", (req, res) => {
-  res.json({
-    message: "Post user route is working",
-    data: req.body,
-  });
+// POST create a new user
+app.post("/users", async (req, res) => {
+  try {
+    const { name, course } = req.body;
+
+    if (!name || !course) {
+      return res.status(400).json({
+        message: "Name and course are required",
+      });
+    }
+
+    const user = await User.create({
+      name,
+      course,
+    });
+
+    res.status(201).json(user);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to create user",
+      error: error.message,
+    });
+  }
 });
 
-// Update a user
-app.put("/users/:id", (req, res) => {
-  res.json({
-    message: "Update user route is working",
-    id: req.params.id,
-    data: req.body,
-  });
+// PUT update a user
+app.put("/users/:id", async (req, res) => {
+  try {
+    const { name, course } = req.body;
+
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        name,
+        course,
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to update user",
+      error: error.message,
+    });
+  }
 });
 
-// Delete a user
-app.delete("/users/:id", (req, res) => {
-  res.json({
-    message: "Delete user route is working",
-    id: req.params.id,
-  });
+// DELETE a user
+app.delete("/users/:id", async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    res.json({
+      message: "User deleted successfully",
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to delete user",
+      error: error.message,
+    });
+  }
 });
 
 // Login route
