@@ -31,6 +31,28 @@ app.get("/users", async (req, res) => {
     });
   }
 });
+// Get top 3 most recent posts
+app.get("/posts/recent", async (req, res) => {
+  try {
+    const posts = await Post.aggregate([
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
+      {
+        $limit: 3,
+      },
+    ]);
+
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch recent posts",
+      error: error.message,
+    });
+  }
+});
 
 // POST create a new user
 app.post("/users", async (req, res) => {
