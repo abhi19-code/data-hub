@@ -1,61 +1,40 @@
-# Data Hub API
+# Data Hub REST API
 
-A simple RESTful API built using Node.js and Express.
+This is a REST API project built during Sprint 10.
 
-## Features
+In Sprint 9, the project used temporary data stored in the JavaScript code.
 
-- Get all users
-- Add a new user
-- Update a user
-- Delete a user
-- Mock login endpoint
-- Request logging middleware
+In Sprint 10, I connected the project to MongoDB Atlas using Mongoose so that the data can be stored in a real database.
 
 ## Technologies Used
 
 - Node.js
 - Express.js
+- MongoDB Atlas
+- Mongoose
+- Thunder Client
+- Git
+- GitHub
+- dotenv
 
-## Installation
+## What I Built
 
-```bash
-npm install
-```
+The API has two main models:
 
-## Run the Project
+- User
+- Post
 
-```bash
-npm run dev
-```
+The User API supports creating, reading, updating and deleting users.
 
-Server runs on:
+The Post API allows posts to be created and also connects each post with a user.
 
-```
-http://localhost:5000
-```
+## Features
 
-## API Endpoints
-
-### Home
-
-GET /
-
-### Get Users
-
-GET /users
-
-### Add User
-
-POST /users
-
-### Update User
-
-PUT /users/:id
-
-### Delete User
-
-DELETE /users/:id
-
-### Login
-
-POST /login
+- User CRUD operations
+- Create and get posts
+- MongoDB Atlas database
+- Mongoose schemas
+- Post and User relationship
+- Mongoose `populate()`
+- Top 3 recent posts using aggregation
+- API testing with Thunder Client
